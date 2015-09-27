@@ -33,20 +33,48 @@ The available APIs and commands:
 * **GET** - Get list of available filters and their names
 * **POST** - Create new filter. Returns the filter ID
 
-## /api/filters/<id>
+## /api/filters/{id}
 
 * **GET** - Get settings for the given filter id
 * **PUT** - Update settings for the given filter
 
-## /api/filters/<id>/new
+## /api/filters/{id}/new
 
 * **GET** - New posts from the given filter. These posts were not marked by the
-            user yet.
+  user yet.
 
-## /api/filters/<id>/kept
+## /api/filters/{id}/kept
 
 * **GET** - Posts marked for keeping
 
-## /api/filters/<id>/thrown
+## /api/filters/{id}/thrown
 
 * **GET** - Posts marked as uninteresting
+
+# Database
+
+The DB will hold the following main tables:
+
+* User - A single user. Needed for Facebook connection. Will probably be the
+  auth user models
+* Filter - Filter settings for a specific user
+* Posts - Contents of posts that were filtered. Each unique post will only have
+  one row
+* FilteredPost - Relation between a filter and a given post. Here each post will
+  be marked as interesting/not and have the user's comments.
+
+In more details it will be:
+
+### FILTER
+
+# Filter string
+
+To create a complex filter for the post's contents we need a small and simple
+query language. It will work something like this:
+
+```
+("city center" OR "nahlaot" OR "rehavia") AND NOT "sublet"
+```
+
+It will search in the posts' contents for the given words but filter out things
+containing "sublet"
