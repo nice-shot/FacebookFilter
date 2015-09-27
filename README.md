@@ -82,7 +82,6 @@ The DB will hold the following main tables:
 | User         | Str  | Posting user name                                |
 | Created Time | Time | When was the post created                        |
 | Updated Time | Time | When was the post last updated                   |
-| Likes        | Int  | Number of likes                                  |
 
 ### FilteredPost
 
