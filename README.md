@@ -56,16 +56,44 @@ The available APIs and commands:
 The DB will hold the following main tables:
 
 * User - A single user. Needed for Facebook connection. Will probably be the
-  auth user models
+  auth user model
 * Filter - Filter settings for a specific user
-* Posts - Contents of posts that were filtered. Each unique post will only have
+* Post - Contents of posts that were filtered. Each unique post will only have
   one row
 * FilteredPost - Relation between a filter and a given post. Here each post will
   be marked as interesting/not and have the user's comments.
 
-In more details it will be:
+## Column Details
 
 ### FILTER
+
+| Name      | Type | Description                                   |
+|:----------|:-----|:----------------------------------------------|
+| User      | FK   | Relation to user                              |
+| ID        | Int  | Filter id for specific user. User + this = PK |
+| FilterStr | Str  | The search string to use                      |
+
+### POST
+
+| Name         | Type | Description                                      |
+|:-------------|:-----|:-------------------------------------------------|
+| ID           | Str  | Facebook's post ID. Usually {group_id}_{post_id} |
+| Message      | Str  | The post's text                                  |
+| User         | Str  | Posting user name                                |
+| Created Time | Time | When was the post created                        |
+| Updated Time | Time | When was the post last updated                   |
+| Likes        | Int  | Number of likes                                  |
+
+### FilteredPost
+
+| Name        | Type | Description                            |
+|:------------|:-----|:---------------------------------------|
+| User        | FK   | Relation to user                       |
+| Filter      | FK   | Relation to filter                     |
+| Post        | FK   | Relation to post                       |
+| Found Time  | Time | When has the filter found this post    |
+| Interesting | Bool | Is this post interesting (can be null) |
+| Comment     | Str  | User comment for this post             |
 
 # Filter string
 
