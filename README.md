@@ -35,4 +35,18 @@ The available APIs and commands:
 
 ## /api/filters/<id>
 
-* **GET** - Get settings
+* **GET** - Get settings for the given filter id
+* **PUT** - Update settings for the given filter
+
+## /api/filters/<id>/new
+
+* **GET** - New posts from the given filter. These posts were not marked by the
+            user yet.
+
+## /api/filters/<id>/kept
+
+* **GET** - Posts marked for keeping
+
+## /api/filters/<id>/thrown
+
+* **GET** - Posts marked as uninteresting
