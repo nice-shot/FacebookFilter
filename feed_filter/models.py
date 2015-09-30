@@ -8,7 +8,9 @@ class Filter(models.Model):
     Filter settings for a specific user
     """
     user = models.ForeignKey(auth_models.User, related_name="filters")
-    relative_id = models.PositiveIntegerField(help_text="Unique filter ID per user")
+    relative_id = models.PositiveIntegerField(
+        help_text="ID is unique per user"
+    )
     filter_str = models.CharField(max_length=1000)
 
     class Meta:
@@ -29,7 +31,8 @@ class Post(models.Model):
 
 class FilteredPost(models.Model):
     """
-    Relation between filter and post
+    Relation between filter and post. This includes the user's comment and
+    whether the post is interesting
     """
     filter = models.ForeignKey(Filter)
     post = models.ForeignKey(Post)
