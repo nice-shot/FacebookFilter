@@ -15,17 +15,16 @@ class FilterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         pages_data = validated_data.pop("pages")
-        pages = []
+        new_filter = Filter.objects.create(**validated_data)
         for page_data in pages_data:
             # This may cause a problem were some group names are overriden. We
             # should find a smarter solution
-            # TODO: Make this work!
             page = FacebookPage.objects.update_or_create(
                 defaults={"name": page_data["name"]},
                 id=page_data["id"]
             )[0]
-            pages.append(page)
-        return Filter.objects.create(pages=pages, **validated_data)
+            new_filter.pages.add(page)
+        return new_filter
 
 
 class FilteredPostSerializer(serializers.ModelSerializer):

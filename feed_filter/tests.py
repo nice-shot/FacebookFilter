@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .serializers import FilterSerializer
+from .models import Filter
 
 # Create your tests here.
 class SerializersTests(TestCase):
@@ -18,5 +19,7 @@ class SerializersTests(TestCase):
             "user": 1,
             "name": "Some filter",
         }
-        f = FilterSerializer(data=filter_data)
-        self.assertTrue(f.is_valid())
+        filter_serialize = FilterSerializer(data=filter_data)
+        self.assertTrue(filter_serialize.is_valid())
+        new_filter = filter_serialize.save()
+        self.assertEqual(Filter.objects.count(), 1)
