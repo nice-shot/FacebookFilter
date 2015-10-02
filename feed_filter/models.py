@@ -8,13 +8,8 @@ class Filter(models.Model):
     Filter settings for a specific user
     """
     user = models.ForeignKey(auth_models.User, related_name="filters")
-    relative_id = models.PositiveIntegerField(
-        help_text="ID is unique per user"
-    )
     filter_str = models.CharField(max_length=1000)
 
-    class Meta:
-        unique_together = (("user", "relative_id"),)
 
 class Post(models.Model):
     """
@@ -23,7 +18,8 @@ class Post(models.Model):
     id = models.CharField(max_length=100, primary_key=True,
                           help_text="Facebook post id")
     message = models.TextField()
-    user = models.CharField(max_length=300, help_text="Facebook user name")
+    user = models.CharField(max_length=300,
+                            help_text="Post creator's user name")
     created_time = models.DateTimeField()
     updated_time = models.DateTimeField()
     filters = models.ManyToManyField(Filter, through="FilteredPost",
@@ -37,5 +33,5 @@ class FilteredPost(models.Model):
     filter = models.ForeignKey(Filter)
     post = models.ForeignKey(Post)
     found_time = models.DateTimeField(auto_now_add=True)
-    interesting = models.NullBooleanField()
+    keep = models.NullBooleanField()
     comment = models.TextField(blank=True)
