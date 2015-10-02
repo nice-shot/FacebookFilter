@@ -74,6 +74,7 @@ The DB will hold the following main tables:
 | Name      | Type | Description              |
 |:----------|:-----|:-------------------------|
 | ID        | Int  | Filter id                |
+| Name      | Str  | Name for identification  |
 | User      | FK   | Relation to user         |
 | FilterStr | Str  | The search string to use |
 

@@ -19,6 +19,8 @@ class Filter(models.Model):
     Filter settings for a specific user
     """
     user = models.ForeignKey(auth_models.User, related_name="filters")
+    name = models.CharField(max_length=200,
+                            help_text="Name to identify the filter by")
     filter_str = JSONCharField(max_length=1000)
     # FacebookPage does not have back relation to Filter
     pages = models.ManyToManyField(FacebookPage, related_name="+",
