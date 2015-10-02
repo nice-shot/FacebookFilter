@@ -17,14 +17,8 @@ Simple app for filtering content from Facebook pages
 
 ## Filter
 Main API for configuring and changing filter parameters. This API is only
-available for logged-in users. Each user can have a number of filters and the
-filter id will be an ascending number for the user. So if a user has three
-filters they are reachable in:
-```
-/api/filters/1
-/api/filters/2
-/api/filters/3
-```
+available for logged-in users. Each user can have a number of filters and will
+only be able to view and edit the ones he created.
 
 The available APIs and commands:
 
@@ -60,18 +54,18 @@ The DB will hold the following main tables:
 * Filter - Filter settings for a specific user
 * Post - Contents of posts that were filtered. Each unique post will only have
   one row
-* FilteredPost - Relation between a filter and a given post. Here each post will
-  be marked as interesting/not and have the user's comments.
+* FilteredPost - Relation between a filter and a given post. Here, each post
+  will be marked as interesting/not and have the user's comments.
 
 ## Column Details
 
 ### FILTER
 
-| Name      | Type | Description                                   |
-|:----------|:-----|:----------------------------------------------|
-| User      | FK   | Relation to user                              |
-| ID        | Int  | Filter id for specific user. User + this = PK |
-| FilterStr | Str  | The search string to use                      |
+| Name      | Type | Description              |
+|:----------|:-----|:-------------------------|
+| ID        | Int  | Filter id                |
+| User      | FK   | Relation to user         |
+| FilterStr | Str  | The search string to use |
 
 ### POST
 
@@ -87,7 +81,6 @@ The DB will hold the following main tables:
 
 | Name        | Type | Description                            |
 |:------------|:-----|:---------------------------------------|
-| User        | FK   | Relation to user                       |
 | Filter      | FK   | Relation to filter                     |
 | Post        | FK   | Relation to post                       |
 | Found Time  | Time | When has the filter found this post    |
@@ -96,12 +89,18 @@ The DB will hold the following main tables:
 
 # Filter string
 
-To create a complex filter for the post's contents we need a small and simple
-query language. It will work something like this:
+We should be able to have complex filtering like:
 
-```
-("city center" OR "nahlaot" OR "rehavia") AND NOT "sublet"
+*Find all posts that contain the words "Apartment" and "Roof" except if the word
+"Sublet" exists*
+
+This could be created using a small query language or a JSON format. But at
+first we'll only support searching for multiple strings with **OR** between
+them. This will be created using a simple JSON array object:
+
+```json
+["city center", "uptown", "downtown"]
 ```
 
-It will search in the posts' contents for the given words but filter out things
-containing "sublet"
+Which will translate to: *Find all posts that contain "city center" or "uptown"
+or "downtown"*
