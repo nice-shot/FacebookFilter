@@ -51,13 +51,23 @@ The DB will hold the following main tables:
 
 * User - A single user. Needed for Facebook connection. Will probably be the
   auth user model
+* FacebookPage - Name and ID of a facebook page, group or person we can
+  subscribe to
 * Filter - Filter settings for a specific user
+* FilterFacebookPage - Connection between a filter and the pages it's following
 * Post - Contents of posts that were filtered. Each unique post will only have
   one row
 * FilteredPost - Relation between a filter and a given post. Here, each post
   will be marked as interesting/not and have the user's comments.
 
 ## Column Details
+
+### FACEBOOK_PAGE
+
+| Name | Type | Description            |
+|:-----|:-----|:-----------------------|
+| ID   | Str  | Facebook object id     |
+| Name | Str  | Page/Group/User's name |
 
 ### FILTER
 
@@ -66,6 +76,13 @@ The DB will hold the following main tables:
 | ID        | Int  | Filter id                |
 | User      | FK   | Relation to user         |
 | FilterStr | Str  | The search string to use |
+
+### FILTER_FACEBOOK_PAGE
+
+| Name     | Type | Description |
+|:---------|:-----|:------------|
+| FilterID | Int  | Filter id   |
+| PageID   | Str  | Page id     |
 
 ### POST
 
@@ -76,16 +93,18 @@ The DB will hold the following main tables:
 | User         | Str  | Posting user name                                |
 | Created Time | Time | When was the post created                        |
 | Updated Time | Time | When was the post last updated                   |
+| PageID       | Str  | Page this post came from                         |
 
-### FilteredPost
+### FILTERED_POST
 
 | Name        | Type | Description                            |
 |:------------|:-----|:---------------------------------------|
-| Filter      | FK   | Relation to filter                     |
-| Post        | FK   | Relation to post                       |
+| FilterID    | FK   | Relation to filter                     |
+| PostID      | FK   | Relation to post                       |
 | Found Time  | Time | When has the filter found this post    |
 | Interesting | Bool | Is this post interesting (can be null) |
 | Comment     | Str  | User comment for this post             |
+
 
 # Filter string
 
