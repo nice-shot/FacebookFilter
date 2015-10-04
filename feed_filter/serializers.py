@@ -11,14 +11,21 @@ def retrieve_page(page_data):
     """
     # This may cause a problem where some group names are overriden. Should find
     # a smarter solution
-    return FacebookPage.objects.update_or_create(
+    page, created = FacebookPage.objects.update_or_create(
         defaults={"name": page_data["name"]},
         id=page_data["id"]
-    )[0]
+    )
+    return page
+
 
 class FacebookPageSerializer(serializers.ModelSerializer):
+    # Used to remove the unique validator
+    id = serializers.CharField(max_length=100,
+                               help_text="Page's facebook id")
+
     class Meta:
         model = FacebookPage
+
 
 class FilterSerializer(serializers.ModelSerializer):
     pages = FacebookPageSerializer(many=True)
@@ -31,19 +38,20 @@ class FilterSerializer(serializers.ModelSerializer):
         new_filter = Filter.objects.create(**validated_data)
         for page_data in pages_data:
             new_filter.pages.add(retrieve_page(page_data))
+        new_filter.save()
         return new_filter
 
     def update(self, instance, validated_data):
-        #TODO: This isn't really working...
         instance.user = validated_data.get("user", instance.user)
         instance.name = validated_data.get("name", instance.name)
         instance.filter_str = validated_data.get("filter_str",
                                                  instance.filter_str)
         if "pages" in validated_data:
             instance.pages.clear()
-            for page_data in validated_data.get("pages", []):
+            for page_data in validated_data["pages"]:
                 instance.pages.add(retrieve_page(page_data))
 
+        instance.save()
         return instance
 
 

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from .serializers import FilterSerializer
-from .models import Filter
+from .models import Filter, FacebookPage
 
 # Create your tests here.
 class SerializersTests(TestCase):
@@ -30,9 +30,10 @@ class SerializersTests(TestCase):
                 {"id": "421421", "name": "Wawa"},
             ],
         }
-        filter_serialize = FilterSerializer(new_filter, data=updated_data)
-        filter_serialize.is_valid()
-        print(filter_serialize.errors)
+        filter_serialize = FilterSerializer(new_filter, data=updated_data,
+                                            partial=True)
         self.assertTrue(filter_serialize.is_valid())
         updated_filter = filter_serialize.save()
         self.assertEqual(updated_filter, new_filter)
+        # Make sure we only have 3 FacebookPages
+        self.assertEqual(FacebookPage.objects.count(), 3)
